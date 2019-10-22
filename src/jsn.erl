@@ -844,10 +844,12 @@ set_nth(Index, A, jsn__delete) when Index > 0, Index =< length(A) ->
 set_nth(Index, A, V) when Index > 0, Index =< length(A) ->
     {A1, A2} = lists:split(Index - 1, A),
     lists:concat([A1, [V|tl(A2)]]);
-set_nth(Index, A, V) when Index - 1 =:= length(A) ->
-    lists:reverse([V|lists:reverse(A)]); 
-set_nth(_Index, Term, _V) when not(is_list(Term)) ->
+set_nth(Index, A, V) when Index - 1 >= length(A) ->
+    lists:reverse([V|lists:reverse(A)]);
+set_nth(_Index, Term, jsn__delete) when not(is_list(Term)) ->
     throw({error, {not_an_array, Term}});
+set_nth(_Index, Term, V) when not(is_list(Term)) ->
+    [V];
 set_nth(Index, _A, _V) -> 
     throw({error, {invalid_array_index, Index}}).
 
